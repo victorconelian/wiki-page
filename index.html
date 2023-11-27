@@ -1,0 +1,94 @@
+<h2>Projeto Versionamento e Arquivos de Marcação</h2>
+<h3>Este projeto tem por objetivo colocar em prática alguns conceitos vistos durante o módulo de Versionamento e Arquivos de Marcação.</h3>
+
+
+<h3>Descrição do que será realizado no Projeto:</h3>
+
+<p>Utilizaremos da linguagem <em>Python</em> para leitura dos dados de um arquivo <em>markdown</em> e um arquivo <em>JSON</em>, gerando uma página <em>index.html</em> estático, onde subiremos ao Git Pages. 
+O arquivo <em>markdown</em> terá o conteúdo da nossa página e o <em>JSON</em> as informações de título, descrição e autores. 
+Para realizarmos tudo isso, faremos a instalação do Git Flow para configuração de um fluxo de trabalho onde criaremos uma branch de desenvolvimento (<em>develop</em>) e também criaremos um ambiente virtual (<em>venv</em>) para isolarmos o nosso projeto. 
+No Github usaremos o Actions para automatizar a cada <em>push</em> a atualização da nossa página hospedada no Git Pages.</p>
+
+<h3>Instalação e Execução do Git Flow:</h3>
+
+<pre><code>sudo apt-get install git-flow
+git flow init
+</code></pre>
+
+<h3>Foi criado uma nova branch para desenvolvimento do projeto:</h3>
+
+<div class="codehilite">
+<pre><span></span><code>git branch -l
+* develop
+main
+
+git checkout develop
+</code></pre>
+</div>
+
+<h3>Arquivos utilizados:</h3>
+
+<ul>
+<li><strong>Markdown:</strong> wiki.md (conteúdo escrito em md);</li>
+<li><strong>JSON:</strong> config.json (título, descrição e autores);</li>
+<li><strong>HTML:</strong> layout.html (template) e index.html (escrito a partir do script.py);</li>
+<li><strong>Python:</strong> script.py (responsável em escrever nosso index.html a partir dos outros arquivos).</li>
+</ul>
+
+<h3>Criação de um Ambiente Virtual:</h3>
+
+<p><strong>Para isolarmos as dependências do projeto de modo que cada projeto tenha suas bibliotecas separadas do sistema principal, criamos um ambiente virtual:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">venv</span>
+</code></pre>
+</div>
+
+<p><strong>Ativamos nosso ambiente virtual (linux):</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">source</span> venv/bin/activate
+</code></pre>
+</div>
+
+<p><strong>Instalamos as bibliotecas que utilizaremos no Script:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">pip</span> <span class="n">install</span> <span class="n">jinja2</span> <span class="n">markdown2</span>
+</code></pre>
+</div>
+
+<h3>Script em Python:</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">markdown2</span> <span class="kn">import</span> <span class="n">markdown</span> 
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">load</span>
+
+<span class="n">template_env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">))</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">template_env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;layout.html&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;wiki.md&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">markdown_file</span><span class="p">:</span>
+    <span class="n">wiki</span> <span class="o">=</span> <span class="n">markdown</span><span class="p">(</span>
+        <span class="n">markdown_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+        <span class="n">extras</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fenced-code-blocks&#39;</span><span class="p">,</span> <span class="s1">&#39;code-friendly&#39;</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+            <span class="n">authors</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authors&#39;</span><span class="p">],</span>
+            <span class="n">wiki</span><span class="o">=</span><span class="n">wiki</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</code></pre>
+</div>
+
+
+
+<h3>Autores do Projeto:</h3>
+<p>Breno, Christopher, Danilo, Isaac, Victor</p>
