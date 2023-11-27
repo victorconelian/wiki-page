@@ -71,6 +71,6 @@ with open('index.html', 'w') as output_file:
 ```
 
 ### Criando um arquivo .gitignore:
-Foi criado o .gitignore para ignorar a pasta venv (ambiente virtual Python), pois na hora de realizar a *build* e o *deploy* do Git Pages, havia conflito com um arquivo presente dentro da pasta venv.
+Foi criado o .gitignore para ignorar a pasta venv (ambiente virtual Python), pois na hora de realizar a *build* e o *deploy* pelo Git Actions, havia conflito com um arquivo presente dentro da pasta venv.
 
 
