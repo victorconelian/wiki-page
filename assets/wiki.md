@@ -1,4 +1,3 @@
-CCCCCCC
 ### Descrição do que será realizado no Projeto:
 Utilizaremos da linguagem *Python* para leitura dos dados de um arquivo *markdown* e um arquivo *JSON*, gerando uma página *index.html* estático, onde subiremos ao Git Pages. 
 O arquivo *markdown* terá o conteúdo da nossa página e o *JSON* as informações de título, descrição e autores. 
@@ -70,4 +69,8 @@ with open('index.html', 'w') as output_file:
         )
     )
 ```
+
+### Criando um arquivo .gitignore:
+Foi criado o .gitignore para ignorar a pasta venv (ambiente virtual Python), pois na hora de realizar a *build* e o *deploy* do Git Pages, havia conflito com um arquivo presente dentro da pasta venv.
+
 
